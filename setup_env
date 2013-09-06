@@ -1,0 +1,16 @@
+
+
+# repo https://github.com/sutajiokousagi/u-boot-imx6
+# for a OCRAM-only mini u-boot
+
+# need Sourcery_CodeBench_Lite_for_ARM_EABI
+# version seems to be not critical, tested with latest download (2013-08-22)
+export PATH=/opt/freescale/usr/local/gcc-4.6.2-glibc-2.13-linaro-multilib-2011.12/fsl-linaro-toolchain/bin/:$PATH
+export ARCH=arm
+export CROSS_COMPILE=arm-none-linux-gnueabi-
+
+echo "build (assuming that external stuff is in place)"
+echo "make clean"
+echo "make make dres0280_rev_a_config"
+echo "make"
+echo "sudo dd if=u-boot.imx of=/dev/mmcblk0 seek=2"
