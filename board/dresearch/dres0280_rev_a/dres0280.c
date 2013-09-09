@@ -69,6 +69,18 @@ int dram_init(void)
 	return 0;
 }
 
+// GPIOs are available. don't know, why
+//~ MX6_PAD_EIM_D23__GPIO_3_23
+//~ MX6_PAD_EIM_D24__GPIO_3_24
+//~ MX6_PAD_EIM_D25__GPIO_3_25
+//~ MX6_PAD_EIM_D28__GPIO_3_28
+//~ MX6_PAD_EIM_D29__GPIO_3_29
+//~ MX6_PAD_DISP0_DAT3__GPIO_4_24
+//~ MX6_PAD_DISP0_DAT4__GPIO_4_25
+//~ MX6_PAD_CSI0_DAT12__GPIO_5_30
+//~ MX6_PAD_CSI0_DAT13__GPIO_5_31
+
+
 // UART console
 iomux_v3_cfg_t const uart2_pads[] = {
 	MX6_PAD_EIM_D26__UART2_TXD | MUX_PAD_CTRL(UART_PAD_CTRL),
