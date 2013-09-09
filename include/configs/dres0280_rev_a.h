@@ -122,17 +122,17 @@
 #define CONFIG_CMD_BMODE
 
 /* Framebuffer and LCD */
-#define CONFIG_VIDEO
-#define CONFIG_VIDEO_IPUV3
-#define CONFIG_CFB_CONSOLE
-#define CONFIG_VGA_AS_SINGLE_DEVICE
-#define CONFIG_SYS_CONSOLE_IS_IN_ENV
-#define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
-#define CONFIG_VIDEO_BMP_RLE8
-#define CONFIG_SPLASH_SCREEN
-#define CONFIG_BMP_16BPP
-#define CONFIG_VIDEO_LOGO
-#define CONFIG_IPUV3_CLK 260000000
+//~ #define CONFIG_VIDEO
+//~ #define CONFIG_VIDEO_IPUV3
+//~ #define CONFIG_CFB_CONSOLE
+//~ #define CONFIG_VGA_AS_SINGLE_DEVICE
+//~ #define CONFIG_SYS_CONSOLE_IS_IN_ENV
+//~ #define CONFIG_SYS_CONSOLE_OVERWRITE_ROUTINE
+//~ #define CONFIG_VIDEO_BMP_RLE8
+//~ #define CONFIG_SPLASH_SCREEN
+//~ #define CONFIG_BMP_16BPP
+//~ #define CONFIG_VIDEO_LOGO
+//~ #define CONFIG_IPUV3_CLK 260000000
 
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
@@ -146,7 +146,7 @@
 
 #define CONFIG_BOOTDELAY	       1
 
-#define CONFIG_PREBOOT                 ""
+// #define CONFIG_PREBOOT                 ""
 
 #define CONFIG_LOADADDR			       0x12000000
 #define CONFIG_SYS_TEXT_BASE	       0x17800000
@@ -232,7 +232,7 @@
 /* Miscellaneous configurable options */
 #define CONFIG_SYS_LONGHELP
 #define CONFIG_SYS_HUSH_PARSER
-#define CONFIG_SYS_PROMPT	       "MX6QSABRELITE U-Boot > "
+#define CONFIG_SYS_PROMPT	       "dres0280 U-Boot > "
 #define CONFIG_AUTO_COMPLETE
 #define CONFIG_SYS_CBSIZE	       256
 
