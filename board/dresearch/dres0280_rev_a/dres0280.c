@@ -177,21 +177,20 @@ iomux_v3_cfg_t const enet_pads1[] = {
 	MX6_PAD_RGMII_TX_CTL__RGMII_TX_CTL	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_ENET_REF_CLK__ENET_TX_CLK	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 
-	//~ /* pin 35 - 1 (PHY_AD2) on reset */
-	//~ MX6_PAD_RGMII_RXC__GPIO_6_30		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	//~ /* pin 32 - 1 - (MODE0) all */
-	//~ MX6_PAD_RGMII_RD0__GPIO_6_25		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	//~ /* pin 31 - 1 - (MODE1) all */
-	//~ MX6_PAD_RGMII_RD1__GPIO_6_27		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	//~ /* pin 28 - 1 - (MODE2) all */
-	//~ MX6_PAD_RGMII_RD2__GPIO_6_28		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	//~ /* pin 27 - 1 - (MODE3) all */
-	//~ MX6_PAD_RGMII_RD3__GPIO_6_29		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	//~ /* pin 33 - 1 - (CLK125_EN) 125Mhz clockout enabled */
-	//~ MX6_PAD_RGMII_RX_CTL__GPIO_6_24	| MUX_PAD_CTRL(NO_PAD_CTRL),
-	//~ /* pin 42 PHY nRST */
-	//~ MX6_PAD_EIM_D23__GPIO_3_23		| MUX_PAD_CTRL(NO_PAD_CTRL),
-	//~ MX6_PAD_ENET_RXD0__GPIO_1_27		| MUX_PAD_CTRL(NO_PAD_CTRL),
+	/* pin 35 - 1 (PHY_AD2) on reset */
+	MX6_PAD_RGMII_RXC__GPIO_6_30		| MUX_PAD_CTRL(NO_PAD_CTRL),
+	/* pin 32 - 1 - (MODE0) all */
+	MX6_PAD_RGMII_RD0__GPIO_6_25		| MUX_PAD_CTRL(NO_PAD_CTRL),
+	/* pin 31 - 1 - (MODE1) all */
+	MX6_PAD_RGMII_RD1__GPIO_6_27		| MUX_PAD_CTRL(NO_PAD_CTRL),
+	/* pin 28 - 1 - (MODE2) all */
+	MX6_PAD_RGMII_RD2__GPIO_6_28		| MUX_PAD_CTRL(NO_PAD_CTRL),
+	/* pin 27 - 1 - (MODE3) all */
+	MX6_PAD_RGMII_RD3__GPIO_6_29		| MUX_PAD_CTRL(NO_PAD_CTRL),
+	/* pin 33 - 1 - (CLK125_EN) 125Mhz clockout enabled */
+	MX6_PAD_RGMII_RX_CTL__GPIO_6_24	| MUX_PAD_CTRL(NO_PAD_CTRL),
+	/* pin 42 PHY nRST */
+	MX6_PAD_ENET_CRS_DV__GPIO_1_25    | MUX_PAD_CTRL(NO_PAD_CTRL),
 };
 
 iomux_v3_cfg_t const enet_pads2[] = {
@@ -206,22 +205,21 @@ iomux_v3_cfg_t const enet_pads2[] = {
 
 static void setup_iomux_enet(void)
 {
-	//~ gpio_direction_output(IMX_GPIO_NR(3, 23), 0); /* SABRE Lite PHY rst */
-	//~ gpio_direction_output(IMX_GPIO_NR(1, 27), 0); /* Nitrogen6X PHY rst */
-	//~ gpio_direction_output(IMX_GPIO_NR(6, 30), 1);
-	//~ gpio_direction_output(IMX_GPIO_NR(6, 25), 1);
-	//~ gpio_direction_output(IMX_GPIO_NR(6, 27), 1);
-	//~ gpio_direction_output(IMX_GPIO_NR(6, 28), 1);
-	//~ gpio_direction_output(IMX_GPIO_NR(6, 29), 1);
+	gpio_direction_output(IMX_GPIO_NR(1, 25), 0); /* PHY rst */
+	gpio_direction_output(IMX_GPIO_NR(6, 30), 1); // RGMII RXC
+	gpio_direction_output(IMX_GPIO_NR(6, 25), 1); // RGMII RD0
+	gpio_direction_output(IMX_GPIO_NR(6, 27), 1); // RGMII RD1
+	gpio_direction_output(IMX_GPIO_NR(6, 28), 1); // RGMII RD2
+	gpio_direction_output(IMX_GPIO_NR(6, 29), 1); // RGMII RD3
 	
 	imx_iomux_v3_setup_multiple_pads(enet_pads1, ARRAY_SIZE(enet_pads1));
 	
-	// gpio_direction_output(IMX_GPIO_NR(6, 24), 1);
+	gpio_direction_output(IMX_GPIO_NR(6, 24), 1); // RGMII RX_CTL
 
-	/*TODO: review.  Need delay 10ms according to KSZ9031 spec */
-	// udelay(1000 * 10);
-	// gpio_set_value(IMX_GPIO_NR(3, 23), 1); /* SABRE Lite PHY reset */
-	// gpio_set_value(IMX_GPIO_NR(1, 27), 1); /* Nitrogen6X PHY reset */
+	printf("resetting phy...\n");
+	/*TODO: review.  Need delay 10ms according to KSZ9031RNX spec */
+	udelay(1000 * 10);
+	gpio_set_value(IMX_GPIO_NR(1, 25), 1); /* PHY reset */
 
 	imx_iomux_v3_setup_multiple_pads(enet_pads2, ARRAY_SIZE(enet_pads2));
 }
@@ -322,6 +320,7 @@ void setup_spi(void)
 
 int board_phy_config(struct phy_device *phydev)
 {
+	printf("board_phy_config\n");
 //	/* min rx data delay */
 //	ksz9031_phy_extended_write(phydev,
 //			MII_KSZ9031_EXT_RGMII_RX_DATA_SKEW, 0x0);
@@ -331,43 +330,50 @@ int board_phy_config(struct phy_device *phydev)
 //	/* max rx/tx clock delay, min rx/tx control */
 //	ksz9031_phy_extended_write(phydev,
 //			MII_KSZ9031_EXT_RGMII_CLOCK_SKEW, 0xf0f0);
-//	if (phydev->drv->config)
-//		phydev->drv->config(phydev);
+
+	if (phydev->drv->config)
+	{
+		printf("phydev->drv->config\n");
+		phydev->drv->config(phydev);
+	}
 
 	return 0;
 }
 
-//~ int board_eth_init(bd_t *bis)
-//~ {
-	//~ uint32_t base = IMX_FEC_BASE;
-	//~ struct mii_dev *bus = NULL;
-	//~ struct phy_device *phydev = NULL;
-	//~ int ret;
+int board_eth_init(bd_t *bis)
+{
+	uint32_t base = IMX_FEC_BASE;
+	struct mii_dev *bus = NULL;
+	struct phy_device *phydev = NULL;
+	int ret;
 
-	//~ return 0;
-	
-	//~ setup_iomux_enet();
+	printf("board_eth_init\n");
+	setup_iomux_enet();
 
-//~ #ifdef CONFIG_FEC_MXC
-	//~ bus = fec_get_miibus(base, -1);
-	//~ if (!bus)
-		//~ return 0;
-	//~ /* scan phy 4,5,6,7 */
-	//~ phydev = phy_find_by_mask(bus, (0xf << 4), PHY_INTERFACE_MODE_RGMII);
-	//~ if (!phydev) {
-		//~ free(bus);
-		//~ return 0;
-	//~ }
-	//~ printf("using phy at %d\n", phydev->addr);
-	//~ ret  = fec_probe(bis, -1, base, bus, phydev);
-	//~ if (ret) {
-		//~ printf("FEC MXC: %s:failed\n", __func__);
-		//~ free(phydev);
-		//~ free(bus);
-	//~ }
-//~ #endif
-	//~ return 0;
-//~ }
+#ifdef CONFIG_FEC_MXC
+	bus = fec_get_miibus(base, -1);
+	if (!bus)
+	{
+		printf("fec_get_miibus failed\n");
+		return 0;
+	}
+	/* scan phy 4,5,6,7 */
+	phydev = phy_find_by_mask(bus, (0xf << 4), PHY_INTERFACE_MODE_RGMII);
+	if (!phydev) {
+		printf("phy_find_by_mask failed\n");
+		free(bus);
+		return 0;
+	}
+	printf("using phy at %d\n", phydev->addr);
+	ret  = fec_probe(bis, -1, base, bus, phydev);
+	if (ret) {
+		printf("FEC MXC: %s:failed\n", __func__);
+		free(phydev);
+		free(bus);
+	}
+#endif
+	return 0;
+}
 
 
 
@@ -414,6 +420,7 @@ int checkboard(void)
 static const struct boot_mode board_boot_modes[] = {
 	/* 4 bit bus width */
 	{"mmc0",	MAKE_CFGVAL(0x40, 0x30, 0x00, 0x00)},
+	/* 8 bit bus width */
 	{"mmc1",	MAKE_CFGVAL(0x40, 0x38, 0x00, 0x00)},
 	{NULL,		0},
 };

@@ -78,7 +78,6 @@
 #define CONFIG_CMD_FAT
 #define CONFIG_DOS_PARTITION
 
-#if 1
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_MII
@@ -88,13 +87,11 @@
 #define IMX_FEC_BASE			ENET_BASE_ADDR
 #define CONFIG_FEC_XCV_TYPE		RGMII
 #define CONFIG_ETHPRIME			"FEC"
-#define CONFIG_FEC_MXC_PHYADDR		6
+#define CONFIG_FEC_MXC_PHYADDR		4
 #define CONFIG_PHYLIB
 #define CONFIG_PHY_MICREL
 #define CONFIG_PHY_MICREL_KSZ9031
-#endif
 
-#if 1
 /* USB Configs */
 #define CONFIG_CMD_USB
 #define CONFIG_CMD_FAT
@@ -107,7 +104,6 @@
 #define CONFIG_MXC_USB_PORT	1
 #define CONFIG_MXC_USB_PORTSC	(PORT_PTS_UTMI | PORT_PTS_PTW)
 #define CONFIG_MXC_USB_FLAGS	0
-#endif
 
 /* Miscellaneous commands */
 #define CONFIG_CMD_BMODE
