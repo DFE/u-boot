@@ -1,0 +1,9 @@
+export ARCH=arm
+export CROSS_COMPILE=/home/hwlab/bin/SourceryCodebenchLite_2013.05-23/bin/arm-none-eabi-
+
+echo "build (assuming that external stuff is in place)"
+echo "make clean"
+echo "make dres0280_rev_a_config"
+echo "make"
+echo "sudo dd if=u-boot.imx of=/dev/mmcblk0 seek=2"
+
