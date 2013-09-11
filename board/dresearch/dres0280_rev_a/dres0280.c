@@ -94,46 +94,45 @@ iomux_v3_cfg_t const uart4_pads[] = {
 };
 
 
-#define PC MUX_PAD_CTRL(I2C_PAD_CTRL)
 
-/* I2C1 */
+/* I2C1 -> image sensor */
 struct i2c_pads_info i2c_pad_info0 = {
 	.scl = {
-		.i2c_mode = MX6_PAD_CSI0_DAT9__I2C1_SCL | PC,
-		.gpio_mode = MX6_PAD_CSI0_DAT9__GPIO_5_27 | PC,
+		.i2c_mode = MX6_PAD_CSI0_DAT9__I2C1_SCL | MUX_PAD_CTRL(I2C_PAD_CTRL),
+		.gpio_mode = MX6_PAD_CSI0_DAT9__GPIO_5_27 | MUX_PAD_CTRL(I2C_PAD_CTRL),
 		.gp = IMX_GPIO_NR(5, 27)
 	},
 	.sda = {
-		.i2c_mode = MX6_PAD_CSI0_DAT8__I2C1_SDA | PC,
-		.gpio_mode = MX6_PAD_CSI0_DAT8__GPIO_5_26 | PC,
+		.i2c_mode = MX6_PAD_CSI0_DAT8__I2C1_SDA | MUX_PAD_CTRL(I2C_PAD_CTRL),
+		.gpio_mode = MX6_PAD_CSI0_DAT8__GPIO_5_26 | MUX_PAD_CTRL(I2C_PAD_CTRL),
 		.gp = IMX_GPIO_NR(5, 26)
 	}
 };
 
-/* I2C2 */
+/* I2C2 -> PMIC PF0100 */
 struct i2c_pads_info i2c_pad_info1 = {
 	.scl = {
-		.i2c_mode = MX6_PAD_KEY_COL3__I2C2_SCL | PC,
-		.gpio_mode = MX6_PAD_KEY_COL3__GPIO_4_12 | PC,
+		.i2c_mode = MX6_PAD_KEY_COL3__I2C2_SCL | MUX_PAD_CTRL(I2C_PAD_CTRL),
+		.gpio_mode = MX6_PAD_KEY_COL3__GPIO_4_12 | MUX_PAD_CTRL(I2C_PAD_CTRL),
 		.gp = IMX_GPIO_NR(4, 12)
 	},
 	.sda = {
-		.i2c_mode = MX6_PAD_KEY_ROW3__I2C2_SDA | PC,
-		.gpio_mode = MX6_PAD_KEY_ROW3__GPIO_4_13 | PC,
+		.i2c_mode = MX6_PAD_KEY_ROW3__I2C2_SDA | MUX_PAD_CTRL(I2C_PAD_CTRL),
+		.gpio_mode = MX6_PAD_KEY_ROW3__GPIO_4_13 | MUX_PAD_CTRL(I2C_PAD_CTRL),
 		.gp = IMX_GPIO_NR(4, 13)
 	}
 };
 
-/* I2C3 */
+/* I2C3 -> system board invenSense MPU9150 accel. sensor */
 struct i2c_pads_info i2c_pad_info2 = {
 	.scl = {
-		.i2c_mode = MX6_PAD_GPIO_3__I2C3_SCL | PC,
-		.gpio_mode = MX6_PAD_GPIO_3__GPIO_1_3 | PC,
+		.i2c_mode = MX6_PAD_GPIO_3__I2C3_SCL | MUX_PAD_CTRL(I2C_PAD_CTRL),
+		.gpio_mode = MX6_PAD_GPIO_3__GPIO_1_3 | MUX_PAD_CTRL(I2C_PAD_CTRL),
 		.gp = IMX_GPIO_NR(1, 3)
 	},
 	.sda = {
-		.i2c_mode = MX6_PAD_GPIO_6__I2C3_SDA | PC,
-		.gpio_mode = MX6_PAD_GPIO_6__GPIO_1_6 | PC,
+		.i2c_mode = MX6_PAD_GPIO_6__I2C3_SDA | MUX_PAD_CTRL(I2C_PAD_CTRL),
+		.gpio_mode = MX6_PAD_GPIO_6__GPIO_1_6 | MUX_PAD_CTRL(I2C_PAD_CTRL),
 		.gp = IMX_GPIO_NR(1, 6)
 	}
 };
@@ -162,7 +161,7 @@ iomux_v3_cfg_t const usdhc3_pads[] = {
 	MX6_PAD_SD3_DAT5__USDHC3_DAT5 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
 	MX6_PAD_SD3_DAT6__USDHC3_DAT6 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
 	MX6_PAD_SD3_DAT7__USDHC3_DAT7 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
-	MX6_PAD_SD3_RST__USDHC3_RST     | MUX_PAD_CTRL(NO_PAD_CTRL), 
+	MX6_PAD_SD3_RST__USDHC3_RST   | MUX_PAD_CTRL(USDHC_PAD_CTRL), 
 };
 
 
@@ -269,8 +268,8 @@ int board_ehci_hcd_init(int port)
 
 #ifdef CONFIG_FSL_ESDHC
 struct fsl_esdhc_cfg usdhc_cfg[2] = {
-	{USDHC1_BASE_ADDR},
-	{USDHC3_BASE_ADDR},
+	{USDHC1_BASE_ADDR}, // microSD
+	{USDHC3_BASE_ADDR}, // eMMC
 };
 
 int board_mmc_getcd(struct mmc *mmc)
@@ -328,7 +327,7 @@ int board_mmc_init(bd_t *bis)
 
 #ifdef CONFIG_MXC_SPI
 iomux_v3_cfg_t const ecspi1_pads[] = {
-	MX6_PAD_EIM_D19__ECSPI1_SS1 | MUX_PAD_CTRL(SPI_PAD_CTRL),
+	MX6_PAD_EIM_D19__GPIO_3_19 | MUX_PAD_CTRL(SPI_PAD_CTRL),
 	MX6_PAD_EIM_D17__ECSPI1_MISO | MUX_PAD_CTRL(SPI_PAD_CTRL),
 	MX6_PAD_EIM_D18__ECSPI1_MOSI | MUX_PAD_CTRL(SPI_PAD_CTRL),
 	MX6_PAD_EIM_D16__ECSPI1_SCLK | MUX_PAD_CTRL(SPI_PAD_CTRL),
@@ -336,6 +335,8 @@ iomux_v3_cfg_t const ecspi1_pads[] = {
 
 void setup_spi(void)
 {
+	//FDR: Macronix MX25L3206EM
+	//SF: Detected MX25L3205D with page size 64 KiB, total 4 MiB
 	imx_iomux_v3_setup_multiple_pads(ecspi1_pads,
 					 ARRAY_SIZE(ecspi1_pads));
 }
@@ -358,37 +359,37 @@ int board_phy_config(struct phy_device *phydev)
 	return 0;
 }
 
-int board_eth_init(bd_t *bis)
-{
-	uint32_t base = IMX_FEC_BASE;
-	struct mii_dev *bus = NULL;
-	struct phy_device *phydev = NULL;
-	int ret;
+//~ int board_eth_init(bd_t *bis)
+//~ {
+	//~ uint32_t base = IMX_FEC_BASE;
+	//~ struct mii_dev *bus = NULL;
+	//~ struct phy_device *phydev = NULL;
+	//~ int ret;
 
-	return 0;
+	//~ return 0;
 	
-	setup_iomux_enet();
+	//~ setup_iomux_enet();
 
-#ifdef CONFIG_FEC_MXC
-	bus = fec_get_miibus(base, -1);
-	if (!bus)
-		return 0;
-	/* scan phy 4,5,6,7 */
-	phydev = phy_find_by_mask(bus, (0xf << 4), PHY_INTERFACE_MODE_RGMII);
-	if (!phydev) {
-		free(bus);
-		return 0;
-	}
-	printf("using phy at %d\n", phydev->addr);
-	ret  = fec_probe(bis, -1, base, bus, phydev);
-	if (ret) {
-		printf("FEC MXC: %s:failed\n", __func__);
-		free(phydev);
-		free(bus);
-	}
-#endif
-	return 0;
-}
+//~ #ifdef CONFIG_FEC_MXC
+	//~ bus = fec_get_miibus(base, -1);
+	//~ if (!bus)
+		//~ return 0;
+	//~ /* scan phy 4,5,6,7 */
+	//~ phydev = phy_find_by_mask(bus, (0xf << 4), PHY_INTERFACE_MODE_RGMII);
+	//~ if (!phydev) {
+		//~ free(bus);
+		//~ return 0;
+	//~ }
+	//~ printf("using phy at %d\n", phydev->addr);
+	//~ ret  = fec_probe(bis, -1, base, bus, phydev);
+	//~ if (ret) {
+		//~ printf("FEC MXC: %s:failed\n", __func__);
+		//~ free(phydev);
+		//~ free(bus);
+	//~ }
+//~ #endif
+	//~ return 0;
+//~ }
 
 
 
@@ -416,6 +417,7 @@ int board_init(void)
 #ifdef CONFIG_MXC_SPI
 	setup_spi();
 #endif
+	
 	setup_i2c(0, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info0);
 	setup_i2c(1, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info1);
 	setup_i2c(2, CONFIG_SYS_I2C_SPEED, 0x7f, &i2c_pad_info2);
@@ -425,7 +427,7 @@ int board_init(void)
 
 int checkboard(void)
 {
-	puts("Board: dres0280 rev a\n");
+	puts("Board: dres0280_rev_a\n");
 
 	return 0;
 }

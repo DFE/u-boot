@@ -47,23 +47,28 @@
 #define CONFIG_MXC_UART
 #define CONFIG_MXC_UART_BASE	       UART2_BASE
 
+#if 1
 #define CONFIG_CMD_SF
 #ifdef CONFIG_CMD_SF
 #define CONFIG_SPI_FLASH
-#define CONFIG_SPI_FLASH_SST
+#define CONFIG_SPI_FLASH_MACRONIX
 #define CONFIG_MXC_SPI
 #define CONFIG_SF_DEFAULT_BUS  0
 #define CONFIG_SF_DEFAULT_CS   (0|(IMX_GPIO_NR(3, 19)<<8))
 #define CONFIG_SF_DEFAULT_SPEED 25000000
 #define CONFIG_SF_DEFAULT_MODE (SPI_MODE_0)
 #endif
+#endif
 
+#if 1
 /* I2C Configs */
 #define CONFIG_CMD_I2C
 #define CONFIG_I2C_MULTI_BUS
 #define CONFIG_I2C_MXC
-#define CONFIG_SYS_I2C_SPEED		100000
+#define CONFIG_SYS_I2C_SPEED		400000
+#endif
 
+#if 1
 /* MMC Configs */
 #define CONFIG_FSL_ESDHC
 #define CONFIG_FSL_USDHC
@@ -77,20 +82,9 @@
 #define CONFIG_CMD_EXT2
 #define CONFIG_CMD_FAT
 #define CONFIG_DOS_PARTITION
-
-//#define CONFIG_CMD_SATA
-/*
- * SATA Configs
- */
-#ifdef CONFIG_CMD_SATA
-#define CONFIG_DWC_AHSATA
-#define CONFIG_SYS_SATA_MAX_DEVICE	1
-#define CONFIG_DWC_AHSATA_PORT_ID	0
-#define CONFIG_DWC_AHSATA_BASE_ADDR	SATA_ARB_BASE_ADDR
-#define CONFIG_LBA48
-#define CONFIG_LIBATA
 #endif
 
+#if 1
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_DHCP
 #define CONFIG_CMD_MII
@@ -104,7 +98,9 @@
 #define CONFIG_PHYLIB
 #define CONFIG_PHY_MICREL
 #define CONFIG_PHY_MICREL_KSZ9031
+#endif
 
+#if 1
 /* USB Configs */
 #define CONFIG_CMD_USB
 #define CONFIG_CMD_FAT
@@ -117,6 +113,7 @@
 #define CONFIG_MXC_USB_PORT	1
 #define CONFIG_MXC_USB_PORTSC	(PORT_PTS_UTMI | PORT_PTS_PTW)
 #define CONFIG_MXC_USB_FLAGS	0
+#endif
 
 /* Miscellaneous commands */
 #define CONFIG_CMD_BMODE
@@ -214,6 +211,7 @@
 			"bootm; " \
 		"fi;\0"
 
+
 #define CONFIG_BOOTCOMMAND \
 	   "mmc dev ${mmcdev};" \
 	   "mmc dev ${mmcdev}; if mmc rescan; then " \
@@ -226,6 +224,9 @@
 			   "fi; " \
 		   "fi; " \
 	   "else run netboot; fi"
+
+// for bring-up
+#undef CONFIG_BOOTCOMMAND
 
 #define CONFIG_ARP_TIMEOUT     200UL
 
