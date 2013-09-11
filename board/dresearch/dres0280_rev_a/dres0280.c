@@ -161,7 +161,7 @@ iomux_v3_cfg_t const usdhc3_pads[] = {
 	MX6_PAD_SD3_DAT5__USDHC3_DAT5 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
 	MX6_PAD_SD3_DAT6__USDHC3_DAT6 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
 	MX6_PAD_SD3_DAT7__USDHC3_DAT7 | MUX_PAD_CTRL(USDHC_PAD_CTRL),
-	MX6_PAD_SD3_RST__USDHC3_RST   | MUX_PAD_CTRL(USDHC_PAD_CTRL), 
+//	MX6_PAD_SD3_RST__USDHC3_RST   | MUX_PAD_CTRL(USDHC_PAD_CTRL), 
 };
 
 
@@ -203,18 +203,6 @@ iomux_v3_cfg_t const enet_pads2[] = {
 	MX6_PAD_RGMII_RX_CTL__RGMII_RX_CTL	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 };
 
-/* wl1271 pads on nitrogen6x */
-iomux_v3_cfg_t const wl12xx_pads[] = {
-	(MX6_PAD_NANDF_CS1__GPIO_6_14 & ~MUX_PAD_CTRL_MASK)
-		| MUX_PAD_CTRL(WEAK_PULLDOWN),
-	(MX6_PAD_NANDF_CS2__GPIO_6_15 & ~MUX_PAD_CTRL_MASK)
-		| MUX_PAD_CTRL(OUTPUT_40OHM),
-	(MX6_PAD_NANDF_CS3__GPIO_6_16 & ~MUX_PAD_CTRL_MASK)
-		| MUX_PAD_CTRL(OUTPUT_40OHM),
-};
-#define WL12XX_WL_IRQ_GP	IMX_GPIO_NR(6, 14)
-#define WL12XX_WL_ENABLE_GP	IMX_GPIO_NR(6, 15)
-#define WL12XX_BT_ENABLE_GP	IMX_GPIO_NR(6, 16)
 
 static void setup_iomux_enet(void)
 {
@@ -275,19 +263,9 @@ struct fsl_esdhc_cfg usdhc_cfg[2] = {
 int board_mmc_getcd(struct mmc *mmc)
 {
 	struct fsl_esdhc_cfg *cfg = (struct fsl_esdhc_cfg *)mmc->priv;
-	int ret;
-
-/*
-	if (cfg->esdhc_base == USDHC3_BASE_ADDR) {
-		gpio_direction_input(IMX_GPIO_NR(7, 0));
-		ret = !gpio_get_value(IMX_GPIO_NR(7, 0));
-	} else {
-		gpio_direction_input(IMX_GPIO_NR(2, 6));
-		ret = !gpio_get_value(IMX_GPIO_NR(2, 6));
-	}
-*/
-	ret = 1; // we dont have CD pins
-	return ret;
+	(void)cfg;
+	
+	return 1; // we dont have CD signals
 }
 
 int board_mmc_init(bd_t *bis)

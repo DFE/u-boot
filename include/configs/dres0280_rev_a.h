@@ -47,7 +47,6 @@
 #define CONFIG_MXC_UART
 #define CONFIG_MXC_UART_BASE	       UART2_BASE
 
-#if 1
 #define CONFIG_CMD_SF
 #ifdef CONFIG_CMD_SF
 #define CONFIG_SPI_FLASH
@@ -58,17 +57,13 @@
 #define CONFIG_SF_DEFAULT_SPEED 25000000
 #define CONFIG_SF_DEFAULT_MODE (SPI_MODE_0)
 #endif
-#endif
 
-#if 1
 /* I2C Configs */
 #define CONFIG_CMD_I2C
 #define CONFIG_I2C_MULTI_BUS
 #define CONFIG_I2C_MXC
 #define CONFIG_SYS_I2C_SPEED		400000
-#endif
 
-#if 1
 /* MMC Configs */
 #define CONFIG_FSL_ESDHC
 #define CONFIG_FSL_USDHC
@@ -82,7 +77,6 @@
 #define CONFIG_CMD_EXT2
 #define CONFIG_CMD_FAT
 #define CONFIG_DOS_PARTITION
-#endif
 
 #if 1
 #define CONFIG_CMD_PING
