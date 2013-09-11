@@ -139,7 +139,7 @@ struct i2c_pads_info i2c_pad_info2 = {
 };
 
 
-
+/* micro SD slot / boot device for development */
 iomux_v3_cfg_t const usdhc1_pads[] = {
 	MX6_PAD_SD1_CLK__USDHC1_CLK   | MUX_PAD_CTRL(USDHC_PAD_CTRL),
 	MX6_PAD_SD1_CMD__USDHC1_CMD   | MUX_PAD_CTRL(USDHC_PAD_CTRL),
@@ -150,7 +150,7 @@ iomux_v3_cfg_t const usdhc1_pads[] = {
 	// there is no CD pin
 };
 
-
+/* eMMC card */
 iomux_v3_cfg_t const usdhc3_pads[] = {
 	MX6_PAD_SD3_CLK__USDHC3_CLK   | MUX_PAD_CTRL(USDHC_PAD_CTRL),
 	MX6_PAD_SD3_CMD__USDHC3_CMD   | MUX_PAD_CTRL(USDHC_PAD_CTRL),
@@ -231,7 +231,7 @@ static void setup_iomux_enet(void)
 	
 	// gpio_direction_output(IMX_GPIO_NR(6, 24), 1);
 
-	/* Need delay 10ms according to KSZ9021 spec */
+	/*TODO: review.  Need delay 10ms according to KSZ9031 spec */
 	// udelay(1000 * 10);
 	// gpio_set_value(IMX_GPIO_NR(3, 23), 1); /* SABRE Lite PHY reset */
 	// gpio_set_value(IMX_GPIO_NR(1, 27), 1); /* Nitrogen6X PHY reset */
@@ -343,17 +343,17 @@ void setup_spi(void)
 
 int board_phy_config(struct phy_device *phydev)
 {
-	/* min rx data delay */
-	ksz9021_phy_extended_write(phydev,
-			MII_KSZ9021_EXT_RGMII_RX_DATA_SKEW, 0x0);
-	/* min tx data delay */
-	ksz9021_phy_extended_write(phydev,
-			MII_KSZ9021_EXT_RGMII_TX_DATA_SKEW, 0x0);
-	/* max rx/tx clock delay, min rx/tx control */
-	ksz9021_phy_extended_write(phydev,
-			MII_KSZ9021_EXT_RGMII_CLOCK_SKEW, 0xf0f0);
-	if (phydev->drv->config)
-		phydev->drv->config(phydev);
+//	/* min rx data delay */
+//	ksz9031_phy_extended_write(phydev,
+//			MII_KSZ9031_EXT_RGMII_RX_DATA_SKEW, 0x0);
+//	/* min tx data delay */
+//	ksz9031_phy_extended_write(phydev,
+//			MII_KSZ9031_EXT_RGMII_TX_DATA_SKEW, 0x0);
+//	/* max rx/tx clock delay, min rx/tx control */
+//	ksz9031_phy_extended_write(phydev,
+//			MII_KSZ9031_EXT_RGMII_CLOCK_SKEW, 0xf0f0);
+//	if (phydev->drv->config)
+//		phydev->drv->config(phydev);
 
 	return 0;
 }
