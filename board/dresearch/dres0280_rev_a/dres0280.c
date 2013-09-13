@@ -167,8 +167,8 @@ iomux_v3_cfg_t const usdhc3_pads[] = {
 
 
 iomux_v3_cfg_t const enet_pads1[] = {
-	MX6_PAD_ENET_MDC__ENET_MDC		| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_ENET_MDIO__ENET_MDIO		| MUX_PAD_CTRL(ENET_PAD_CTRL),
+	MX6_PAD_ENET_MDC__ENET_MDC		| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_TXC__ENET_RGMII_TXC	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_TD0__ENET_RGMII_TD0	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_TD1__ENET_RGMII_TD1	| MUX_PAD_CTRL(ENET_PAD_CTRL),
@@ -176,7 +176,6 @@ iomux_v3_cfg_t const enet_pads1[] = {
 	MX6_PAD_RGMII_TD3__ENET_RGMII_TD3	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_RGMII_TX_CTL__RGMII_TX_CTL	| MUX_PAD_CTRL(ENET_PAD_CTRL),
 	MX6_PAD_ENET_REF_CLK__ENET_TX_CLK	| MUX_PAD_CTRL(ENET_PAD_CTRL),
-
 	/* pin 35 - 1 (PHY_AD2) on reset */
 	MX6_PAD_RGMII_RXC__GPIO_6_30		| MUX_PAD_CTRL(NO_PAD_CTRL),
 	/* pin 32 - 1 - (MODE0) all */
@@ -216,8 +215,7 @@ static void setup_iomux_enet(void)
 	
 	gpio_direction_output(IMX_GPIO_NR(6, 24), 1); // RGMII RX_CTL
 
-	printf("resetting phy...\n");
-	/*TODO: review.  Need delay 10ms according to KSZ9031RNX spec */
+	/*TODO: review.  Need delay 10ms according to KSZ9021RNX spec */
 	udelay(1000 * 10);
 	gpio_set_value(IMX_GPIO_NR(1, 25), 1); /* PHY reset */
 
@@ -241,6 +239,7 @@ static void setup_iomux_uart(void)
 #ifdef CONFIG_USB_EHCI_MX6
 int board_ehci_hcd_init(int port)
 {
+	return 0;  //  not yet
 	imx_iomux_v3_setup_multiple_pads(usb_pads, ARRAY_SIZE(usb_pads));
 
 	/* Reset USB hub */
@@ -320,20 +319,22 @@ void setup_spi(void)
 
 int board_phy_config(struct phy_device *phydev)
 {
-	printf("board_phy_config\n");
+	//printf("board_phy_config\n");
+
+// from nitrogen6x KSZ9021:	
 //	/* min rx data delay */
-//	ksz9031_phy_extended_write(phydev,
-//			MII_KSZ9031_EXT_RGMII_RX_DATA_SKEW, 0x0);
+//	ksz9021_phy_extended_write(phydev,
+//			MII_KSZ9021_EXT_RGMII_RX_DATA_SKEW, 0x0);
 //	/* min tx data delay */
-//	ksz9031_phy_extended_write(phydev,
-//			MII_KSZ9031_EXT_RGMII_TX_DATA_SKEW, 0x0);
+//	ksz9021_phy_extended_write(phydev,
+//			MII_KSZ9021_EXT_RGMII_TX_DATA_SKEW, 0x0);
 //	/* max rx/tx clock delay, min rx/tx control */
-//	ksz9031_phy_extended_write(phydev,
-//			MII_KSZ9031_EXT_RGMII_CLOCK_SKEW, 0xf0f0);
+//	ksz9021_phy_extended_write(phydev,
+//			MII_KSZ9021_EXT_RGMII_CLOCK_SKEW, 0xf0f0);
 
 	if (phydev->drv->config)
 	{
-		printf("phydev->drv->config\n");
+		//printf("phydev->drv->config\n");
 		phydev->drv->config(phydev);
 	}
 
@@ -347,7 +348,6 @@ int board_eth_init(bd_t *bis)
 	struct phy_device *phydev = NULL;
 	int ret;
 
-	printf("board_eth_init\n");
 	setup_iomux_enet();
 
 #ifdef CONFIG_FEC_MXC
@@ -357,14 +357,13 @@ int board_eth_init(bd_t *bis)
 		printf("fec_get_miibus failed\n");
 		return 0;
 	}
-	/* scan phy 4,5,6,7 */
-	phydev = phy_find_by_mask(bus, (0xf << 4), PHY_INTERFACE_MODE_RGMII);
+	/* scan phy at address 0 */
+	phydev = phy_find_by_mask(bus, 1, PHY_INTERFACE_MODE_RGMII);
 	if (!phydev) {
 		printf("phy_find_by_mask failed\n");
 		free(bus);
 		return 0;
 	}
-	printf("using phy at %d\n", phydev->addr);
 	ret  = fec_probe(bis, -1, base, bus, phydev);
 	if (ret) {
 		printf("FEC MXC: %s:failed\n", __func__);
