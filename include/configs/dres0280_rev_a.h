@@ -139,7 +139,7 @@
 #define CONFIG_LOADADDR			       0x12000000
 #define CONFIG_SYS_TEXT_BASE	       0x17800000
 
-/* EBK: remove -> "console=ttymxc1\0" \ */
+#define CONFIG_ETHADDR 	DE:AD:BE:EF:02:80
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
