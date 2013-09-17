@@ -11,6 +11,6 @@ export CROSS_COMPILE=arm-none-linux-gnueabi-
 
 echo "build (assuming that external stuff is in place)"
 echo "make clean"
-echo "make make dres0280_rev_a_config"
+echo "make dres0280_rev_a_config"
 echo "make"
 echo "sudo dd if=u-boot.imx of=/dev/mmcblk0 seek=2"
