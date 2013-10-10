@@ -143,6 +143,7 @@
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
+	"bootcmd=sf probe;sf read 0x10800000 0x60000 0x3A0000;setenv bootargs 'console=ttymxc1,115200 rw root=/dev/mmcblk0p1 rootwait';bootm 0x10800000\0" \
 	"uimage=uImage\0" \
 	"console=ttymxc1\0" \
 	"fdt_high=0xffffffff\0" \
@@ -260,15 +261,16 @@
 
 #define CONFIG_ENV_SIZE			(8 * 1024)
 
-#define CONFIG_ENV_IS_IN_MMC
-/* #define CONFIG_ENV_IS_IN_SPI_FLASH */
+/* #define CONFIG_ENV_IS_IN_MMC */
+#define CONFIG_ENV_IS_IN_SPI_FLASH
 
 #if defined(CONFIG_ENV_IS_IN_MMC)
 #define CONFIG_ENV_OFFSET		(6 * 64 * 1024)
 #define CONFIG_SYS_MMC_ENV_DEV		0
 #elif defined(CONFIG_ENV_IS_IN_SPI_FLASH)
-#define CONFIG_ENV_OFFSET		(768 * 1024)
-#define CONFIG_ENV_SECT_SIZE		(8 * 1024)
+#define CONFIG_ENV_OFFSET		(320 * 1024)
+/*#define CONFIG_ENV_OFFSET_REDUND        (328 * 1024)*/
+#define CONFIG_ENV_SECT_SIZE		(64 * 1024)
 #define CONFIG_ENV_SPI_BUS		CONFIG_SF_DEFAULT_BUS
 #define CONFIG_ENV_SPI_CS		CONFIG_SF_DEFAULT_CS
 #define CONFIG_ENV_SPI_MODE		CONFIG_SF_DEFAULT_MODE
